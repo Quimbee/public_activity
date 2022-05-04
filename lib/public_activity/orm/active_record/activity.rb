@@ -14,7 +14,7 @@ module PublicActivity
       end
     end
   end
-  
+
   module ORM
     module ActiveRecord
       # The ActiveRecord model containing
@@ -30,13 +30,13 @@ module PublicActivity
         case ::ActiveRecord::VERSION::MAJOR
         when 3..4
           # Define ownership to a resource responsible for this activity
-          belongs_to :owner, :polymorphic => true
+          belongs_to :owner, PublicActivity.config.owner_options
           # Define ownership to a resource targeted by this activity
           belongs_to :recipient, :polymorphic => true
         when 5..6
           with_options(:required => false) do
             # Define ownership to a resource responsible for this activity
-            belongs_to :owner, :polymorphic => true
+            belongs_to :owner, PublicActivity.config.owner_options
             # Define ownership to a resource targeted by this activity
             belongs_to :recipient, :polymorphic => true
           end

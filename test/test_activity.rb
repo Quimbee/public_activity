@@ -2,7 +2,30 @@
 
 require 'test_helper'
 
-describe 'PublicActivity::Activity Rendering' do
+describe 'PublicActivity::Activity' do
+  it "allows owner association options to be overwritten" do
+    PublicActivity::Config.owner_options({ class_name: "User" })
+
+    klass = Class.new(PublicActivity::Activity)
+    klass.must_respond_to :owner
+    case ENV["PA_ORM"]
+      when "active_record"
+        klass.reflect_on_association(:owner).options[:polymorphic].must_equal wont_be_nil
+      when "mongoid"
+        klass.reflect_on_association(:owner).options[:polymorphic].must_equal nil
+      when "mongo_mapper"
+        klass.reflect_on_association(:owner).options[:polymorphic].must_equal nil
+    end
+
+    if ENV["PA_ORM"] == "mongo_mapper"
+      klass.associations[:owner].options[:class_name].must_equal "User"
+    else
+      klass.reflect_on_association(:owner).options[:class_name].must_equal "User"
+    end
+
+    PublicActivity::Config.owner_options({ polymorphic: true })
+  end
+
   describe '#text' do
     subject { PublicActivity::Activity.new(:key => 'activity.test', :parameters => {:one => 1}) }
 
