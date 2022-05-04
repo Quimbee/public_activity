@@ -31,14 +31,14 @@ module PublicActivity
         when 5
           with_options(required: false) do
             # Define ownership to a resource responsible for this activity
-            belongs_to :owner, polymorphic: true
+            belongs_to :owner, PublicActivity.config.owner_options
             # Define ownership to a resource targeted by this activity
             belongs_to :recipient, polymorphic: true
           end
         when 6..7
           with_options(optional: true) do
             # Define ownership to a resource responsible for this activity
-            belongs_to :owner, polymorphic: true
+            belongs_to :owner, PublicActivity.config.owner_options
             # Define ownership to a resource targeted by this activity
             belongs_to :recipient, polymorphic: true
           end
