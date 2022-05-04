@@ -28,7 +28,7 @@ module PublicActivity
 
         with_options(optional: true) do
           # Define ownership to a resource responsible for this activity
-          belongs_to :owner, polymorphic: true
+          belongs_to :owner, PublicActivity.config.owner_options
           # Define ownership to a resource targeted by this activity
           belongs_to :recipient, polymorphic: true
         end
