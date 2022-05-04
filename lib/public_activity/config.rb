@@ -47,6 +47,12 @@ module PublicActivity
       self.class.table_name(name)
     end
 
+    # alias for {#owner_options}
+    # @see Config#owner_options
+    def owner_options(owner_options = {})
+      self.class.owner_options(owner_options)
+    end
+
     # instance version of {Config#enabled}
     # @see Config#orm
     def enabled(value = nil)
@@ -76,6 +82,14 @@ module PublicActivity
         val.nil? ? true : val
       else
         Thread.current[:public_activity_enabled] = value
+      end
+    end
+
+    def self.owner_options(owner_options = {})
+      if owner_options.blank?
+        Thread.current[:owner_options] || { :polymorphic => true }
+      else
+        Thread.current[:owner_options] = owner_options
       end
     end
 

@@ -13,16 +13,19 @@ module PublicActivity
         include ::Mongoid::Attributes::Dynamic if ::Mongoid::VERSION.split('.')[0].to_i >= 4
         include Renderable
 
-        if ::Mongoid::VERSION.split('.')[0].to_i >= 7
-          opts = { polymorphic: true, optional: false }
-        else
-          opts = { polymorphic: true }
-        end
+        extra_options =
+          if ::Mongoid::VERSION.split('.')[0].to_i >= 7
+            { optional: false }
+          else
+            {}
+          end
+
+        opts = { polymorphic: true }.merge(extra_options)
 
         # Define polymorphic association to the parent
         belongs_to :trackable,  opts
         # Define ownership to a resource responsible for this activity
-        belongs_to :owner,      opts
+        belongs_to :owner,      PublicActivity.config.owner_options.merge(extra_options)
         # Define ownership to a resource targeted by this activity
         belongs_to :recipient,  opts
 
